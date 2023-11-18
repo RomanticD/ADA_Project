@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct CurrencyExchangeData : Identifiable {
+    let currency: String
+    let rate: [Double]
+    let id = UUID()
+}

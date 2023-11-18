@@ -10,7 +10,11 @@
 		077A0EB72B070ACE00544A0B /* CurrencyExchangeSysApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0EB62B070ACE00544A0B /* CurrencyExchangeSysApp.swift */; };
 		077A0EB92B070ACE00544A0B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0EB82B070ACE00544A0B /* ContentView.swift */; };
 		077A0EBB2B070ACF00544A0B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 077A0EBA2B070ACF00544A0B /* Assets.xcassets */; };
-		077A0EBE2B070ACF00544A0B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 077A0EBD2B070ACF00544A0B /* Preview Assets.xcassets */; };
+		077A0EC62B070C3700544A0B /* MainPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0EC52B070C3700544A0B /* MainPanel.swift */; };
+		077A0EC82B071D8E00544A0B /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0EC72B071D8E00544A0B /* Helper.swift */; };
+		077A0ECA2B072CEB00544A0B /* CurrencyExchangeGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0EC92B072CEB00544A0B /* CurrencyExchangeGraphView.swift */; };
+		077A0ECC2B072FEC00544A0B /* CurrencyExchangeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0ECB2B072FEC00544A0B /* CurrencyExchangeData.swift */; };
+		077A0ECE2B08325A00544A0B /* WelcomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0ECD2B08325A00544A0B /* WelcomePage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,8 +22,12 @@
 		077A0EB62B070ACE00544A0B /* CurrencyExchangeSysApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeSysApp.swift; sourceTree = "<group>"; };
 		077A0EB82B070ACE00544A0B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		077A0EBA2B070ACF00544A0B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		077A0EBD2B070ACF00544A0B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		077A0EBF2B070ACF00544A0B /* CurrencyExchangeSys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CurrencyExchangeSys.entitlements; sourceTree = "<group>"; };
+		077A0EC52B070C3700544A0B /* MainPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPanel.swift; sourceTree = "<group>"; };
+		077A0EC72B071D8E00544A0B /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		077A0EC92B072CEB00544A0B /* CurrencyExchangeGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeGraphView.swift; sourceTree = "<group>"; };
+		077A0ECB2B072FEC00544A0B /* CurrencyExchangeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeData.swift; sourceTree = "<group>"; };
+		077A0ECD2B08325A00544A0B /* WelcomePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomePage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,21 +60,17 @@
 		077A0EB52B070ACE00544A0B /* CurrencyExchangeSys */ = {
 			isa = PBXGroup;
 			children = (
+				077A0EBF2B070ACF00544A0B /* CurrencyExchangeSys.entitlements */,
+				077A0EBA2B070ACF00544A0B /* Assets.xcassets */,
 				077A0EB62B070ACE00544A0B /* CurrencyExchangeSysApp.swift */,
 				077A0EB82B070ACE00544A0B /* ContentView.swift */,
-				077A0EBA2B070ACF00544A0B /* Assets.xcassets */,
-				077A0EBF2B070ACF00544A0B /* CurrencyExchangeSys.entitlements */,
-				077A0EBC2B070ACF00544A0B /* Preview Content */,
+				077A0EC52B070C3700544A0B /* MainPanel.swift */,
+				077A0EC72B071D8E00544A0B /* Helper.swift */,
+				077A0EC92B072CEB00544A0B /* CurrencyExchangeGraphView.swift */,
+				077A0ECB2B072FEC00544A0B /* CurrencyExchangeData.swift */,
+				077A0ECD2B08325A00544A0B /* WelcomePage.swift */,
 			);
 			path = CurrencyExchangeSys;
-			sourceTree = "<group>";
-		};
-		077A0EBC2B070ACF00544A0B /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				077A0EBD2B070ACF00544A0B /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +131,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				077A0EBE2B070ACF00544A0B /* Preview Assets.xcassets in Resources */,
 				077A0EBB2B070ACF00544A0B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,6 +144,11 @@
 			files = (
 				077A0EB92B070ACE00544A0B /* ContentView.swift in Sources */,
 				077A0EB72B070ACE00544A0B /* CurrencyExchangeSysApp.swift in Sources */,
+				077A0ECA2B072CEB00544A0B /* CurrencyExchangeGraphView.swift in Sources */,
+				077A0ECC2B072FEC00544A0B /* CurrencyExchangeData.swift in Sources */,
+				077A0ECE2B08325A00544A0B /* WelcomePage.swift in Sources */,
+				077A0EC62B070C3700544A0B /* MainPanel.swift in Sources */,
+				077A0EC82B071D8E00544A0B /* Helper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,7 +282,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CurrencyExchangeSys/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 9XYPW6PMST;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -301,7 +309,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CurrencyExchangeSys/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 9XYPW6PMST;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
