@@ -16,7 +16,7 @@ struct ContentView: View {
                         MainPanel()
                     } label: {
                         Image(systemName: "wand.and.stars")
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(.indigo)
                         Text("Get start")
                     }
                 }
@@ -26,7 +26,7 @@ struct ContentView: View {
                         WelcomePage()
                     } label: {
                         Image(systemName: "globe.asia.australia.fill")
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(.indigo)
                         Text("Welcome")
                     }
                 }

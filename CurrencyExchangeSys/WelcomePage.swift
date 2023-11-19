@@ -10,7 +10,7 @@ import SwiftUI
 struct WelcomePage: View {
     var screen = NSScreen.main?.visibleFrame
     let imageLeft = "Illustration 9"
-    let imageRight = "Illustration 5"
+    let imageRight = "Illustration 7"
     
     var body: some View {
         HStack(spacing: 0) {
@@ -21,7 +21,8 @@ struct WelcomePage: View {
                 Image(imageLeft)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 150, height: 150)
+                    .frame(width: 200, height: 200)
+                    .padding(.top, -30)
                 
                 Text("Welcome to Group 2's Project")
                     .font(.largeTitle)
@@ -35,8 +36,8 @@ struct WelcomePage: View {
                 
                 Spacer()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
+            .frame(width: (screen!.width / 1.8) / 2)
+            .background(Color(hex: "8c44f5").opacity(0.1))
             
             
             VStack{
@@ -45,38 +46,51 @@ struct WelcomePage: View {
                 Image(imageRight)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .padding(.leading, -35)
+                    .padding(.leading, -100)
+                    .padding(.trailing, 30)
                 
                 Spacer()
             }
             .frame(width: (screen!.width / 1.8) / 2)
-            .background(Color(hex: "8c44f5"))
+            .background(Color(hex: "8c44f5").opacity(0.7))
+            
         }
         .navigationTitle("Welcome")
         .ignoresSafeArea(.all, edges: .all)
-        .frame(width: (screen!.width / 1.8), height: (screen!.height / 1.8))
+//        .frame(width: (screen!.width / 1.8), height: (screen!.height / 1.8))
     }
     
     @ViewBuilder
-    func createProfileView(_ name : String) -> some View {
-        HStack {
-            Image(systemName: "person.circle.fill")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 25, height: 25)
-                .foregroundColor(.indigo)
+    private func createProfileView(_ name : String) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 15)
+                .foregroundStyle(Color.white)
+                .frame(width: 200, height: 50)
+                .shadow(color: Color.black.opacity(0.1), radius: 7, x: 5, y: 5)
+                .shadow(color: Color.black.opacity(0.1), radius: 7, x: -5, y: -5)
             
-            Spacer(minLength: 0)
-            
-            Text(name)
-                .padding(.leading)
+            HStack {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 25, height: 25)
+                    .foregroundColor(.indigo)
+                
+                Spacer(minLength: 0)
+                
+                Text(name)
+                    .tracking(0.8)
+                    .foregroundStyle(Color.black)
+                    .bold()
+                    .padding(.leading)
+                
+                Spacer()
+            }
+            .frame(width: 150)
+            .padding(.vertical, 10)
+            .padding(.horizontal)
+            .background(Color.white)
         }
-        .frame(width: 150)
-        .padding(.vertical, 8)
-        .padding(.horizontal)
-        .background(Color.white)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 5, y: 5)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: -5, y: -5)
     }
 }
 
