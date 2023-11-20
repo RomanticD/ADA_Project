@@ -9,12 +9,15 @@ import SwiftUI
 
 struct CurrencyExchangeGraphView: View {
     @Binding var rateData : [CurrencyExchangeData]
-    @State var ratePathResultSet : [Double] = [0.127081, 19.200318]
-    @State var isRefreshButtonClicked : Bool = false
+    @State private var ratePathResultSet : [Double] = [0.127081, 19.200318]
+    @State private var isRefreshButtonClicked : Bool = false
+    @State private var isFetchLatestButtonClicked : Bool = false
+    @State private var isFetchHistoricButtonClicked : Bool = false
     @Binding var selectedCurrency : [String]
     @Binding var animated : Bool
-    @State var showAlert : Bool = false
+    @State private var showAlert : Bool = false
     @State private var selectedDate = Date.now
+    @State private var mode : CurrencyDataMode = .latest
     var screen = NSScreen.main?.visibleFrame
     
     var body: some View {
@@ -55,6 +58,7 @@ struct CurrencyExchangeGraphView: View {
             }
             
             let sortedRateData = rateData.sorted(by: {$0.currency < $1.currency})
+            
               
             Grid() {
                 GridRow {
@@ -62,7 +66,7 @@ struct CurrencyExchangeGraphView: View {
                         .bold()
                         .foregroundStyle(Color.secondary)
                     
-                    if (rateData.count != selectedCurrency.count && rateData != defaultRateData){
+                    if (hasPanelModified()){
                         //after data was fetched
                         ForEach(selectedCurrency, id: \.self){ currency in
                             Text(currency)
@@ -78,6 +82,7 @@ struct CurrencyExchangeGraphView: View {
                         }
                     }
                 }
+                .frame(height: hasPanelModified() ? (300.0 / CGFloat((selectedCurrency.count + 1))) : 60)
                 
                 Divider()
                 
@@ -96,6 +101,7 @@ struct CurrencyExchangeGraphView: View {
                             }
                         }
                     }
+                    .frame(height: hasPanelModified() ? (300.0 / CGFloat((selectedCurrency.count + 1))) : 60)
                     
                     Divider()
                 }
@@ -106,6 +112,8 @@ struct CurrencyExchangeGraphView: View {
                     .foregroundStyle(Color.indigo.opacity(0.2))
                     .shadow(radius: 7, x: 5, y: 5)
             }
+            
+            Spacer(minLength: 0)
            
             VStack{
                 HStack(alignment: .firstTextBaseline){
@@ -143,58 +151,115 @@ struct CurrencyExchangeGraphView: View {
                             )
                         }
                 }
-                .padding(.top)
+                .padding(.top, 20)
                 
                 createCurrencyTags()
                     .padding(.top, -10)
-                
-                DatePicker("Please enter a date", selection: $selectedDate, in: Date.now.addingTimeInterval(-365 * 24 * 60 * 60)...Date.now , displayedComponents: .date)
-                    .labelsHidden()
             }
+    
+            VStack {
+                createRefreshButton(setMode: .latest, buttonText: "Get Latest Currency Rate", symbolName: "clock.badge.checkmark")
+                
+                createRefreshButton(setMode: .historic, buttonText: "Get Historic Currency Rate", symbolName: "clock.arrow.circlepath")
+            }
+            .padding(.top, 20)
         }
         .frame(width: (screen!.width / 1.5) / 2)
         .ignoresSafeArea()
-        .toolbar {
-            ToolbarItemGroup {
-                Button(action: {
-                    isRefreshButtonClicked = false
-                    
-                    if (selectedCurrency.isEmpty){
-                        showAlert.toggle()
-                        return
-                    }
-                    
-                    withAnimation {
-                        isRefreshButtonClicked.toggle()
-                    }
-                    
-                    rateData = []
-                    
-                    Task{
-                        await fetchExchangeRatesForSelectedCurrencies(selectedCurrency: selectedCurrency)
-                    }
-                }) {
-                    HStack {
-                        Image(systemName: "arrow.clockwise")
-                            .bold()
-                            .foregroundStyle(.primary)
-                            .rotationEffect(.degrees(isRefreshButtonClicked ? 360 : 0))
-                    
-                    }
-                }
-                .alert(isPresented: $showAlert) {
-                    Alert(title: Text("No Currency Selected"), message: Text("Please choose at least TWO currency"), dismissButton: .default(Text("Got it")))
-                }
-            }
+    }
+    
+    private func hasPanelModified() -> Bool{
+        return rateData.count != selectedCurrency.count && rateData != defaultRateData
+    }
+    
+    private func correspondingClickedParameter(mode : CurrencyDataMode) -> Bool {
+        switch mode {
+        case .latest:
+            return isFetchLatestButtonClicked
+        case .historic:
+            return isFetchHistoricButtonClicked
         }
     }
     
-    func fetchExchangeRatesForSelectedCurrencies(selectedCurrency : [String]) async {
+    
+    @ViewBuilder
+    private func createButtonContent(mode: CurrencyDataMode, symbolName: String, buttonText: String) -> some View {
+        let isButtonClicked: Bool = correspondingClickedParameter(mode: mode)
+        
+        HStack {
+            Image(systemName: symbolName)
+                .padding(.trailing, 6)
+                .font(.system(size: 20))
+                .foregroundStyle(Color(hex: "2c3e50"))
+                .symbolEffect(
+                    .bounce.up.byLayer,
+                    options: .speed(1.3).repeat(selectedCurrency.count + 1),
+                    value: isButtonClicked
+                )
+            
+            Text(buttonText)
+                .frame(width: 170)
+                .foregroundColor(Color(hex: "2a0845"))
+                .padding()
+                .lineLimit(1)
+                .background(content: {
+                    LinearGradient(
+                        colors: [.mint, .blue, .indigo],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .opacity(0.3)
+                })
+                .frame(height: 30)
+                .cornerRadius(15)
+                .overlay(Capsule().stroke(Color(hex: "2c3e50").opacity(0.6), lineWidth: 1))
+        }
+    }
+
+    @ViewBuilder
+    private func createRefreshButton(setMode: CurrencyDataMode, buttonText: String, symbolName: String) -> some View {
+        Button(action: {
+            showAlert = false
+            
+            if (selectedCurrency.count < 2){
+                showAlert.toggle()
+                return
+            }
+            
+            mode = setMode
+            
+            withAnimation {
+                switch setMode {
+                case .latest:
+                    isFetchLatestButtonClicked.toggle()
+                case .historic:
+                    isFetchHistoricButtonClicked.toggle()
+                }
+            }
+            
+            rateData = []
+            
+            Task{
+                await fetchLatestExchangeRatesForSelectedCurrencies(selectedCurrency: selectedCurrency, mode: mode)
+                
+                defaultRateData = rateData
+            }
+        }) {
+            createButtonContent(mode: setMode, symbolName: symbolName, buttonText: buttonText)
+        }
+        .offset(x: -20)
+        .padding(.vertical, 4)
+        .buttonStyle(.plain)
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("No Currency Selected"), message: Text("Please choose at least TWO currency"), dismissButton: .default(Text("Got it")))
+        }
+    }
+    
+    private func fetchLatestExchangeRatesForSelectedCurrencies(selectedCurrency : [String], mode: CurrencyDataMode) async {
         for baseCurrency in selectedCurrency {
             var currenciesToFetch = selectedCurrency
             currenciesToFetch.removeAll { $0 == baseCurrency }
-
-            await fetchLatestExchangeRate(baseCurrency: baseCurrency, currencies: currenciesToFetch)
+            await fetchLatestExchangeRate(baseCurrency: baseCurrency, currencies: currenciesToFetch, mode: mode)
         }
     }
     
@@ -207,23 +272,40 @@ struct CurrencyExchangeGraphView: View {
         ]
     }
     
-    private func fetchLatestExchangeRate(baseCurrency: String, currencies: [String]) async {
+    private func fetchLatestExchangeRate(baseCurrency: String, currencies: [String], mode: CurrencyDataMode) async {
         let targetCurrencies = currencies.sorted(by: {$0 < $1}).joined(separator: "%2C")
-        
         var exchangeRates: [String: Double] = [:]
+        var url : URL
         
-        guard let url = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_puJRzjU6qLajkDBk2yo157HJGsu8P5u6qj92nGmx&currencies=\(targetCurrencies)&base_currency=\(baseCurrency)") else{
-                print("Invalid URL")
-            return
-        }
-        print("fetching exchange rate at: \(url)")
+        switch mode {
+            case .latest:
+                guard let latestURL = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_puJRzjU6qLajkDBk2yo157HJGsu8P5u6qj92nGmx&currencies=\(targetCurrencies)&base_currency=\(baseCurrency)") else {
+                    print("Invalid URL")
+                    return
+                }
+                url = latestURL
+            case .historic:
+                guard let historicURL = URL(string: "https://api.freecurrencyapi.com/v1/historical?apikey=fca_live_puJRzjU6qLajkDBk2yo157HJGsu8P5u6qj92nGmx&currencies=\(targetCurrencies)&base_currency=\(baseCurrency)&date=\(generateDate())") else {
+                    print("Invalid URL")
+                    return
+                }
+                url = historicURL
+            }
         
         do{
             let (data, _) = try await URLSession.shared.data(from: url)
             
-            if let decodedResponse = try? JSONDecoder().decode(FetchedLatestExchangeRate.self, from: data){
-                exchangeRates = decodedResponse.data
-                print("Successfully decoded!")
+            switch mode {
+            case .latest:
+                if let decodedResponse = try? JSONDecoder().decode(FetchedLatestExchangeRate.self, from: data){
+                    exchangeRates = decodedResponse.data
+                    print("Successfully decoded!")
+                }
+            case .historic:
+                if let decodedResponse = try? JSONDecoder().decode(FetchedHistoricalExchangeRate.self, from: data){
+                    exchangeRates = decodedResponse.data.first?.value ?? [:]
+                    print("Successfully decoded!")
+                }
             }
             
             rateData.append(CurrencyExchangeData(currency: baseCurrency, rate: extractDoubleValues(from: exchangeRates, baseCurrency: baseCurrency)))
@@ -282,36 +364,6 @@ struct CurrencyExchangeGraphView: View {
         }
     }
 
-}
-
-struct CellModifier: ViewModifier {
-    let data: Double
-    let ratePathResultSet: [Double]
-    @Binding var animated : Bool
-
-    func body(content: Content) -> some View {
-        let rateContainedInResult = ratePathResultSet.contains(data)
-        let isBoldAndColored : Bool  = rateContainedInResult && animated
-        
-        return content
-            .bold(isBoldAndColored)
-            .foregroundStyle(getTextColor(data: data, ratePathResultSet: ratePathResultSet, animated: animated))
-    }
-    
-    private func getTextColor(data: Double, ratePathResultSet: [Double], animated: Bool) -> Color{
-        let rateContainedInResult = ratePathResultSet.contains(data)
-        let isBoldAndColored : Bool  = rateContainedInResult && animated
-        
-        if (data == 1.0){
-            return Color.secondary
-        }else{
-            if (isBoldAndColored){
-                return Color.indigo.opacity(0.8)
-            }else{
-                return Color.primary
-            }
-        }
-    }
 }
 
 #Preview {

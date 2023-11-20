@@ -62,3 +62,18 @@ internal func hasArbitrage(matrix: [[Double]]) -> (Bool, [Int]) {
 
     return (false, [])
 }
+
+internal func generateDate() -> String {
+    let currentDate = Date()
+    let randomTimeInterval = TimeInterval(arc4random_uniform(UInt32(5 * 365 * 24 * 60 * 60)))
+    
+    if let randomDate = Calendar.current.date(byAdding: .second, value: -Int(randomTimeInterval), to: currentDate) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let dateString = dateFormatter.string(from: randomDate)
+        
+        return dateString
+    } else {
+        return "Error generating date"
+    }
+}
