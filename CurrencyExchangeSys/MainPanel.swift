@@ -9,12 +9,7 @@ import SwiftUI
 
 struct MainPanel: View {
     var screen = NSScreen.main?.visibleFrame
-    let sampleData: [CurrencyExchangeData] = [
-        CurrencyExchangeData(currency: "CNY", rate: [1.0, 0.127081, 1.080852, 20.752706]),
-        CurrencyExchangeData(currency: "EUR", rate: [7.869022, 1.0, 8.505249, 163.303490]),
-        CurrencyExchangeData(currency: "HKD", rate: [0.925196, 0.117574, 1.0, 19.200318]),
-        CurrencyExchangeData(currency: "JPY", rate: [0.048186, 0.006124, 0.052082, 1]),
-    ]
+    @State var sampleData: [CurrencyExchangeData] = defaultRateData
     @State var animated : Bool = false;
     @State var selectedCurrency : [String] = []
     
@@ -23,13 +18,12 @@ struct MainPanel: View {
             Spacer()
             
             HStack {
-                CurrencyExchangeGraphView(rateData: sampleData, selectedCurrency: $selectedCurrency, animated: $animated)
+                CurrencyExchangeGraphView(rateData: $sampleData, selectedCurrency: $selectedCurrency, animated: $animated)
                  
-                OperationPanel(animated: $animated, selectedCurrency: $selectedCurrency)
-                
+                OperationPanel(animated: $animated, selectedCurrency: $selectedCurrency, rateData: $sampleData)
             }
             .ignoresSafeArea(.all, edges: .all)
-            .frame(width: (screen!.width / 1.8), height: (screen!.height / 1.8))
+            .frame(width: (screen!.width / 1.5), height: (screen!.height / 1.5))
             .navigationTitle("Get Arbitrage Cycle")
             
             Spacer()

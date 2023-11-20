@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CurrencyExchangeData : Identifiable {
+struct CurrencyExchangeData : Identifiable, Equatable {
     let currency: String
     let rate: [Double]
     let id = UUID()

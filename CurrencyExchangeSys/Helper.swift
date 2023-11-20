@@ -21,3 +21,10 @@ extension Color {
         self.init(red: r, green: g, blue: b, opacity: 1.0)
     }
 }
+
+let defaultRateData: [CurrencyExchangeData] = [
+        CurrencyExchangeData(currency: "CNY", rate: [1.0, 0.127081, 1.080852, 20.752706]),
+        CurrencyExchangeData(currency: "EUR", rate: [7.869022, 1.0, 8.505249, 163.303490]),
+        CurrencyExchangeData(currency: "HKD", rate: [0.925196, 0.117574, 1.0, 19.200318]),
+        CurrencyExchangeData(currency: "JPY", rate: [0.048186, 0.006124, 0.052082, 1]),
+    ]

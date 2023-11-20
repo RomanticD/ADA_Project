@@ -36,7 +36,7 @@ struct WelcomePage: View {
                 
                 Spacer()
             }
-            .frame(width: (screen!.width / 1.8) / 2)
+            .frame(width: (screen!.width / 1.5) / 2)
             .background(Color(hex: "8c44f5").opacity(0.1))
             
             
@@ -51,7 +51,7 @@ struct WelcomePage: View {
                 
                 Spacer()
             }
-            .frame(width: (screen!.width / 1.8) / 2)
+            .frame(width: (screen!.width / 1.5) / 2)
             .background(Color(hex: "8c44f5").opacity(0.7))
             
         }

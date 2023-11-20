@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CurrencyExchangeGraphView: View {
-    @State var rateData : [CurrencyExchangeData]
+    @Binding var rateData : [CurrencyExchangeData]
     @State var ratePathResultSet : [Double] = [0.127081, 19.200318]
     @State var isRefreshButtonClicked : Bool = false
     @Binding var selectedCurrency : [String]
@@ -54,17 +54,27 @@ struct CurrencyExchangeGraphView: View {
             }
             
             let sortedRateData = rateData.sorted(by: {$0.currency < $1.currency})
-            
+              
             Grid() {
                 GridRow {
                     Text("From / To")
                         .bold()
                         .foregroundStyle(Color.secondary)
                     
-                    ForEach(sortedRateData) { datum in
-                        Text(datum.currency)
-                            .bold()
-                            .foregroundStyle(Color.secondary)
+                    if (rateData.count != selectedCurrency.count && rateData != defaultRateData){
+                        //after data was fetched
+                        ForEach(selectedCurrency, id: \.self){ currency in
+                            Text(currency)
+                                .bold()
+                                .foregroundStyle(Color.secondary)
+                        }
+                    } else {
+                        //default one
+                        ForEach(sortedRateData) { datum in
+                            Text(datum.currency)
+                                .bold()
+                                .foregroundStyle(Color.secondary)
+                        }
                     }
                 }
                 
@@ -76,9 +86,13 @@ struct CurrencyExchangeGraphView: View {
                             .bold()
                             .foregroundStyle(Color.secondary)
                         
-                        ForEach(datum.rate, id: \.self) { rate in
-                            Text("\(rate)")
-                                .modifier(CellModifier(data: rate, ratePathResultSet: ratePathResultSet, animated: $animated))
+                        if (datum.rate.isEmpty){
+                            ProgressView()
+                        }else{
+                            ForEach(datum.rate, id: \.self) { rate in
+                                Text("\(rate)")
+                                    .modifier(CellModifier(data: rate, ratePathResultSet: ratePathResultSet, animated: $animated))
+                            }
                         }
                     }
                     
@@ -134,7 +148,7 @@ struct CurrencyExchangeGraphView: View {
                     .padding(.top, -10)
             }
         }
-        .frame(width: (screen!.width / 1.8) / 2)
+        .frame(width: (screen!.width / 1.5) / 2)
         .ignoresSafeArea()
         .toolbar {
             ToolbarItemGroup {
@@ -297,11 +311,6 @@ struct CellModifier: ViewModifier {
 }
 
 #Preview {
-    CurrencyExchangeGraphView(rateData: [
-        CurrencyExchangeData(currency: "CNY", rate: [1.0, 0.127081, 1.080852, 20.752706]),
-        CurrencyExchangeData(currency: "EUR", rate: [7.869022, 1.0, 8.505249, 163.303490]),
-        CurrencyExchangeData(currency: "HKD", rate: [0.925196, 0.117574, 1.0, 19.200318]),
-        CurrencyExchangeData(currency: "JPY", rate: [0.048186, 0.006124, 0.052082, 1]),
-    ], selectedCurrency: .constant(["CNY", "JPY"]), animated: .constant(false))
+    CurrencyExchangeGraphView(rateData: .constant(defaultRateData), selectedCurrency: .constant(["CNY", "JPY"]), animated: .constant(false))
     .frame(width: 400, height: 500)
 }
