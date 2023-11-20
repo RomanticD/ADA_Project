@@ -6,6 +6,11 @@
 //
 import Foundation
 
-struct FetchedExchangeRate: Codable {
+struct FetchedLatestExchangeRate: Codable {
     var data: [String: Double]
 }
+
+struct FetchedHistoricalExchangeRate : Codable {
+    let data: [String: [String: Double]]
+}
+

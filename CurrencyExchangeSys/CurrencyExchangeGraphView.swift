@@ -14,6 +14,7 @@ struct CurrencyExchangeGraphView: View {
     @Binding var selectedCurrency : [String]
     @Binding var animated : Bool
     @State var showAlert : Bool = false
+    @State private var selectedDate = Date.now
     var screen = NSScreen.main?.visibleFrame
     
     var body: some View {
@@ -146,6 +147,9 @@ struct CurrencyExchangeGraphView: View {
                 
                 createCurrencyTags()
                     .padding(.top, -10)
+                
+                DatePicker("Please enter a date", selection: $selectedDate, in: Date.now.addingTimeInterval(-365 * 24 * 60 * 60)...Date.now , displayedComponents: .date)
+                    .labelsHidden()
             }
         }
         .frame(width: (screen!.width / 1.5) / 2)
@@ -217,7 +221,7 @@ struct CurrencyExchangeGraphView: View {
         do{
             let (data, _) = try await URLSession.shared.data(from: url)
             
-            if let decodedResponse = try? JSONDecoder().decode(FetchedExchangeRate.self, from: data){
+            if let decodedResponse = try? JSONDecoder().decode(FetchedLatestExchangeRate.self, from: data){
                 exchangeRates = decodedResponse.data
                 print("Successfully decoded!")
             }
