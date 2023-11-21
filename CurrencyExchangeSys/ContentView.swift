@@ -31,7 +31,8 @@ struct ContentView: View {
                     }
                 }
             }
-        } detail: {    
+            .tint(.indigo)
+        } detail: {
             WelcomePage()
         }
     }

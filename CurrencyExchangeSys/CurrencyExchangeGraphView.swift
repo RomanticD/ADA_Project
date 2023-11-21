@@ -9,14 +9,15 @@ import SwiftUI
 
 struct CurrencyExchangeGraphView: View {
     @Binding var rateData : [CurrencyExchangeData]
-    @State private var ratePathResultSet : [Double] = [0.127081, 19.200318]
+    @Binding var ratePathResultSet : [Double]
     @State private var isRefreshButtonClicked : Bool = false
     @State private var isFetchLatestButtonClicked : Bool = false
     @State private var isFetchHistoricButtonClicked : Bool = false
     @Binding var selectedCurrency : [String]
     @Binding var animated : Bool
     @State private var showAlert : Bool = false
-    @State private var selectedDate = Date.now
+    @State private var refreshOver : Bool = false
+    @State private var selectedCount = 4
     @State private var mode : CurrencyDataMode = .latest
     var screen = NSScreen.main?.visibleFrame
     
@@ -56,6 +57,7 @@ struct CurrencyExchangeGraphView: View {
                     }
                 
             }
+            .transition(.opacity)
             
             let sortedRateData = rateData.sorted(by: {$0.currency < $1.currency})
             
@@ -82,7 +84,7 @@ struct CurrencyExchangeGraphView: View {
                         }
                     }
                 }
-                .frame(height: hasPanelModified() ? (300.0 / CGFloat((selectedCurrency.count + 1))) : 60)
+                .frame(height: canGridHeightBeModified() ? (250 / CGFloat((selectedCount + 1))) : 50)
                 
                 Divider()
                 
@@ -101,11 +103,13 @@ struct CurrencyExchangeGraphView: View {
                             }
                         }
                     }
-                    .frame(height: hasPanelModified() ? (300.0 / CGFloat((selectedCurrency.count + 1))) : 60)
+                    .frame(height: canGridHeightBeModified() ? (250 / CGFloat((selectedCount + 1))) : 50)
                     
                     Divider()
                 }
             }
+            .transition(.opacity)
+            .frame(maxHeight: 400)
             .padding()
             .background {
                 RoundedRectangle(cornerRadius: 20)
@@ -113,11 +117,10 @@ struct CurrencyExchangeGraphView: View {
                     .shadow(radius: 7, x: 5, y: 5)
             }
             
-            Spacer(minLength: 0)
            
             VStack{
                 HStack(alignment: .firstTextBaseline){
-                    Image(systemName: "dot.circle.and.cursorarrow")
+                    Image(systemName: "cursorarrow.rays")
                         .bold()
                         .font(.largeTitle)
                         .foregroundStyle(.purple)
@@ -156,11 +159,12 @@ struct CurrencyExchangeGraphView: View {
                 createCurrencyTags()
                     .padding(.top, -10)
             }
+            .transition(.opacity)
     
             VStack {
-                createRefreshButton(setMode: .latest, buttonText: "Get Latest Currency Rate", symbolName: "clock.badge.checkmark")
+                createRefreshButton(setMode: .latest, buttonText: "Get Latest Exchange Rate", symbolName: "clock.badge.checkmark")
                 
-                createRefreshButton(setMode: .historic, buttonText: "Get Historic Currency Rate", symbolName: "clock.arrow.circlepath")
+                createRefreshButton(setMode: .historic, buttonText: "Random Historic Exchange Rate", symbolName: "clock.arrow.circlepath")
             }
             .padding(.top, 20)
         }
@@ -170,6 +174,10 @@ struct CurrencyExchangeGraphView: View {
     
     private func hasPanelModified() -> Bool{
         return rateData.count != selectedCurrency.count && rateData != defaultRateData
+    }
+    
+    private func canGridHeightBeModified() -> Bool{
+        return rateData.count == selectedCurrency.count || refreshOver
     }
     
     private func correspondingClickedParameter(mode : CurrencyDataMode) -> Bool {
@@ -198,7 +206,7 @@ struct CurrencyExchangeGraphView: View {
                 )
             
             Text(buttonText)
-                .frame(width: 170)
+                .frame(width: 230)
                 .foregroundColor(Color(hex: "2a0845"))
                 .padding()
                 .lineLimit(1)
@@ -240,13 +248,18 @@ struct CurrencyExchangeGraphView: View {
             rateData = []
             
             Task{
+                refreshOver = false
+                
                 await fetchLatestExchangeRatesForSelectedCurrencies(selectedCurrency: selectedCurrency, mode: mode)
                 
                 defaultRateData = rateData
+                refreshOver = true
+                selectedCount = selectedCurrency.count
             }
         }) {
             createButtonContent(mode: setMode, symbolName: symbolName, buttonText: buttonText)
         }
+        .transition(.opacity)
         .offset(x: -20)
         .padding(.vertical, 4)
         .buttonStyle(.plain)
@@ -367,6 +380,6 @@ struct CurrencyExchangeGraphView: View {
 }
 
 #Preview {
-    CurrencyExchangeGraphView(rateData: .constant(defaultRateData), selectedCurrency: .constant(["CNY", "JPY"]), animated: .constant(false))
+    CurrencyExchangeGraphView(rateData: .constant(defaultRateData), ratePathResultSet: .constant([0.127081, 19.200318]), selectedCurrency: .constant(["CNY", "JPY"]), animated: .constant(false))
     .frame(width: 400, height: 500)
 }

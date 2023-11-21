@@ -12,15 +12,16 @@ struct MainPanel: View {
     @State var sampleData: [CurrencyExchangeData] = defaultRateData
     @State var animated : Bool = false;
     @State var selectedCurrency : [String] = []
+    @State private var ratePathResultSet : [Double] = [0.127081, 19.200318]
     
     var body: some View {
         VStack {
             Spacer()
             
             HStack {
-                CurrencyExchangeGraphView(rateData: $sampleData, selectedCurrency: $selectedCurrency, animated: $animated)
+                CurrencyExchangeGraphView(rateData: $sampleData, ratePathResultSet: $ratePathResultSet, selectedCurrency: $selectedCurrency, animated: $animated)
                  
-                OperationPanel(animated: $animated, selectedCurrency: $selectedCurrency, rateData: $sampleData)
+                OperationPanel(animated: $animated, selectedCurrency: $selectedCurrency, rateData: $sampleData, ratePathResultSet: $ratePathResultSet)
             }
             .ignoresSafeArea(.all, edges: .all)
             .frame(width: (screen!.width / 1.5), height: (screen!.height / 1.5))

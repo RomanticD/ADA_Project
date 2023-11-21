@@ -27,7 +27,7 @@ struct WelcomePage: View {
                 Text("Welcome to Group 2's Project")
                     .font(.largeTitle)
                     .fontWeight(.heavy)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(.primary)
                     .padding(.bottom, 30)
                 
                 createProfileView("Junhua Di")
