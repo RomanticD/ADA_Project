@@ -77,3 +77,77 @@ internal func generateDate() -> String {
         return "Error generating date"
     }
 }
+
+internal func getArbitageCycle(matrix: [[Double]]) -> (hasArbitageChance: Bool, path: [Int], resultRateSet: [Double]){
+    let vertexCount = matrix.count
+    var hasArbitrageChance = false
+    var vertexPath : [Int] = []
+    var resultRateSet : [Double] = []
+    
+    // Perform Bellman-Ford algorithm to find maximum rate path for bidirectional paths
+    for source in 0..<vertexCount {
+        var distance = Array(repeating: -Double.greatestFiniteMagnitude, count: vertexCount)
+        var predecessor = Array(repeating: -1, count: vertexCount)
+        
+        distance[source] = 0
+        
+        // Loop through vertices
+        for _ in 0..<vertexCount - 1 {
+            // Loop through edges
+            for u in 0..<vertexCount {
+                for v in 0..<vertexCount {
+                    let rate = matrix[u][v] // Rate from u to v
+                    if rate != 0 && distance[u] + log(rate) > distance[v] {
+                        distance[v] = distance[u] + log(rate)
+                        predecessor[v] = u
+                    }
+                }
+            }
+        }
+        
+        // Check for positive cycle
+        for u in 0..<vertexCount {
+            let rate = matrix[u][source] // Rate from u to source
+            if rate != 0 && distance[u] + log(rate) > distance[source] {
+                // Positive cycle detected
+                var current = source
+                var cycle: [Int] = []
+                var visited = Array(repeating: false, count: vertexCount) // To track visited nodes
+                
+                for _ in 0..<vertexCount {
+                    current = predecessor[current]
+                }
+                
+                let start = current
+                cycle.append(start)
+                visited[start] = true // Mark start node as visited
+                current = predecessor[current]
+                
+                while current != start {
+                    cycle.append(current)
+                    visited[current] = true // Mark current node as visited
+                    current = predecessor[current]
+                }
+                
+                let rateProduct = exp(distance[source])
+                if rateProduct > 1 {
+                    hasArbitrageChance = true
+                    vertexPath = cycle.reversed() // Reversed path to show from source to destination
+                    
+                    // Construct the output path array
+                    var outputPath: [Int] = []
+                    for i in 0..<vertexCount {
+                        if visited[i] {
+                            outputPath.append(i)
+                        }
+                    }
+                    
+                    resultRateSet.append(rateProduct)
+                    return (hasArbitrageChance, outputPath, resultRateSet)
+                }
+            }
+        }
+    }
+
+    return (hasArbitrageChance, vertexPath, resultRateSet)
+}
