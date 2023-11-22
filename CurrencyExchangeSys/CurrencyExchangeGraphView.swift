@@ -14,11 +14,13 @@ struct CurrencyExchangeGraphView: View {
     @State private var isFetchLatestButtonClicked : Bool = false
     @State private var isFetchHistoricButtonClicked : Bool = false
     @Binding var selectedCurrency : [String]
+    @State private var columnLabel : [String] = []
     @Binding var animated : Bool
     @State private var showAlert : Bool = false
     @State private var refreshOver : Bool = false
     @State private var selectedCount = 4
     @State private var mode : CurrencyDataMode = .latest
+    @EnvironmentObject var appsettings: AppSetting
     var screen = NSScreen.main?.visibleFrame
     
     var body: some View {
@@ -70,12 +72,13 @@ struct CurrencyExchangeGraphView: View {
                     
                     if (hasPanelModified()){
                         //after data was fetched
-                        ForEach(selectedCurrency, id: \.self){ currency in
+                        ForEach(columnLabel, id: \.self){ currency in
                             Text(currency)
                                 .bold()
                                 .foregroundStyle(Color.secondary)
                         }
-                    } else {
+                    } 
+                    else {
                         //default one
                         ForEach(sortedRateData) { datum in
                             Text(datum.currency)
@@ -168,6 +171,15 @@ struct CurrencyExchangeGraphView: View {
             }
             .padding(.top, 20)
         }
+        .onDisappear(perform: {
+            columnLabel = selectedCurrency
+        })
+        .onAppear(perform: {
+            defaultRateData = rateData
+            for data in defaultRateData.sorted(by: {$0.currency < $1.currency}) {
+                columnLabel.append(data.currency)
+            }
+        })
         .frame(width: (screen!.width / 1.5) / 2)
         .ignoresSafeArea()
     }
@@ -229,12 +241,13 @@ struct CurrencyExchangeGraphView: View {
         Button(action: {
             showAlert = false
             
-            if (selectedCurrency.count < 2){
+            if (selectedCurrency.count < 3){
                 showAlert.toggle()
                 return
             }
             
             mode = setMode
+            columnLabel = selectedCurrency
             
             withAnimation {
                 switch setMode {
@@ -264,7 +277,7 @@ struct CurrencyExchangeGraphView: View {
         .padding(.vertical, 4)
         .buttonStyle(.plain)
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("No Currency Selected"), message: Text("Please choose at least TWO currency"), dismissButton: .default(Text("Got it")))
+            Alert(title: Text("No Currency Selected"), message: Text("Please choose at least THREE currency"), dismissButton: .default(Text("Got it")))
         }
     }
     
@@ -292,7 +305,7 @@ struct CurrencyExchangeGraphView: View {
         
         switch mode {
             case .latest:
-                guard let latestURL = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_puJRzjU6qLajkDBk2yo157HJGsu8P5u6qj92nGmx&currencies=\(targetCurrencies)&base_currency=\(baseCurrency)") else {
+            guard let latestURL = URL(string: "https://api.freecurrencyapi.com/v1/latest?apikey=\(appsettings.apiKey)&currencies=\(targetCurrencies)&base_currency=\(baseCurrency)") else {
                     print("Invalid URL")
                     return
                 }
@@ -382,4 +395,5 @@ struct CurrencyExchangeGraphView: View {
 #Preview {
     CurrencyExchangeGraphView(rateData: .constant(defaultRateData), ratePathResultSet: .constant([0.127081, 19.200318]), selectedCurrency: .constant(["CNY", "JPY"]), animated: .constant(false))
     .frame(width: 400, height: 500)
+    .environmentObject(AppSetting())
 }

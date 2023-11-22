@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct CurrencyExchangeSysApp: App {
+    @StateObject private var appSetting = AppSetting()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appSetting)
         }
     }
 }
