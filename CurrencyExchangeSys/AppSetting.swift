@@ -9,4 +9,5 @@ import Foundation
 
 class AppSetting: ObservableObject {
     @Published var apiKey = "fca_live_puJRzjU6qLajkDBk2yo157HJGsu8P5u6qj92nGmx"
+//    @Published var apiKey = ""
 }

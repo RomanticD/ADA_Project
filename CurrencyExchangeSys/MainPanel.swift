@@ -15,29 +15,28 @@ struct MainPanel: View {
     @State private var ratePathResultSet : [Double] = [0.127081, 19.200318]
     
     var body: some View {
-        VStack {
-            Spacer()
+        ZStack{
+            LinearGradient(colors: [.green, .cyan, .cyan ,.indigo], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        .ignoresSafeArea()
+                        .opacity(0.3)
             
-            HStack {
-                CurrencyExchangeGraphView(rateData: $sampleData, ratePathResultSet: $ratePathResultSet, selectedCurrency: $selectedCurrency, animated: $animated)
-                 
-                OperationPanel(animated: $animated, selectedCurrency: $selectedCurrency, rateData: $sampleData, ratePathResultSet: $ratePathResultSet)
+            VStack {
+                Spacer()
+                
+                HStack {
+                    CurrencyExchangeGraphView(rateData: $sampleData, ratePathResultSet: $ratePathResultSet, selectedCurrency: $selectedCurrency, animated: $animated)
+                     
+                    OperationPanel(animated: $animated, selectedCurrency: $selectedCurrency, rateData: $sampleData, ratePathResultSet: $ratePathResultSet)
+                }
+                .ignoresSafeArea(.all, edges: .all)
+                .frame(width: (screen!.width / 1.5), height: (screen!.height / 1.5))
+                .navigationTitle("Get Arbitrage Cycle")
+                
+                Spacer()
             }
-            .ignoresSafeArea(.all, edges: .all)
-            .frame(width: (screen!.width / 1.5), height: (screen!.height / 1.5))
-            .navigationTitle("Get Arbitrage Cycle")
-            
-            Spacer()
+            .padding()
         }
-        .padding()
-        .background(content: {
-            LinearGradient(
-                colors: [.mint, .blue, .indigo],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-            .opacity(0.2)
-        })
+        
     }
 }
 

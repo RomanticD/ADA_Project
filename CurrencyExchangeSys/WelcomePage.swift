@@ -14,7 +14,6 @@ struct WelcomePage: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            
             VStack{
                 Spacer(minLength: 0)
                 

@@ -151,7 +151,6 @@ struct OperationPanel: View {
             3. Change from EUR to CNY
             """)
             .lineSpacing(5)
-//            .bold()
             .font(.title2)
             .padding(.top)
             

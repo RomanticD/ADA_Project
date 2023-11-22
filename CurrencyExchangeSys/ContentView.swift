@@ -47,7 +47,8 @@ struct ContentView: View {
             }
             .tint(.indigo)
         } detail: {
-            WelcomePage()
+            SettingPanel()
+                .environmentObject(appsettings)
         }
     }
 }

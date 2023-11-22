@@ -10,6 +10,7 @@ import SwiftUI
 struct CurrencyExchangeGraphView: View {
     @Binding var rateData : [CurrencyExchangeData]
     @Binding var ratePathResultSet : [Double]
+    @State private var apiKeyIsMissing = false
     @State private var isRefreshButtonClicked : Bool = false
     @State private var isFetchLatestButtonClicked : Bool = false
     @State private var isFetchHistoricButtonClicked : Bool = false
@@ -42,7 +43,6 @@ struct CurrencyExchangeGraphView: View {
                     .font(.largeTitle)
                     .bold()
                     .tracking(0.5)
-                    .shadow(radius: 1, x: 1, y: 1)
                     .overlay {
                         LinearGradient(
                             colors: [.purple, .blue, .indigo],
@@ -55,9 +55,12 @@ struct CurrencyExchangeGraphView: View {
                                 .multilineTextAlignment(.center)
                                 .tracking(0.5)
                                 .bold()
-                                .shadow(radius: 1, x: 1, y: 1)                        )
+                        )
                     }
                 
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("Not Enough Currency Selected"), message: Text("Please choose at least THREE currency!"), dismissButton: .default(Text("Got it")))
             }
             .transition(.opacity)
             
@@ -111,6 +114,13 @@ struct CurrencyExchangeGraphView: View {
                     Divider()
                 }
             }
+            .alert(isPresented: $apiKeyIsMissing) {
+                Alert(
+                    title: Text("API Key Missing"),
+                    message: Text("Please enter your API key."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
             .transition(.opacity)
             .frame(maxHeight: 400)
             .padding()
@@ -140,7 +150,6 @@ struct CurrencyExchangeGraphView: View {
                         .font(.largeTitle)
                         .bold()
                         .tracking(0.5)
-                        .shadow(radius: 1, x: 1, y: 1)
                         .overlay {
                             LinearGradient(
                                 colors: [.purple, .blue, .indigo],
@@ -153,7 +162,6 @@ struct CurrencyExchangeGraphView: View {
                                     .multilineTextAlignment(.center)
                                     .tracking(0.5)
                                     .bold()
-                                    .shadow(radius: 1, x: 1, y: 1)
                             )
                         }
                 }
@@ -179,9 +187,19 @@ struct CurrencyExchangeGraphView: View {
             for data in defaultRateData.sorted(by: {$0.currency < $1.currency}) {
                 columnLabel.append(data.currency)
             }
+            
+            
         })
         .frame(width: (screen!.width / 1.5) / 2)
         .ignoresSafeArea()
+    }
+    
+    private func checkForAPIKey() -> Bool {
+        if appsettings.apiKey.isEmpty{
+            apiKeyIsMissing = true
+        }
+        
+        return apiKeyIsMissing
     }
     
     private func hasPanelModified() -> Bool{
@@ -239,6 +257,10 @@ struct CurrencyExchangeGraphView: View {
     @ViewBuilder
     private func createRefreshButton(setMode: CurrencyDataMode, buttonText: String, symbolName: String) -> some View {
         Button(action: {
+            if checkForAPIKey(){
+                return
+            }
+            
             showAlert = false
             
             if (selectedCurrency.count < 3){
@@ -276,9 +298,6 @@ struct CurrencyExchangeGraphView: View {
         .offset(x: -20)
         .padding(.vertical, 4)
         .buttonStyle(.plain)
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("No Currency Selected"), message: Text("Please choose at least THREE currency"), dismissButton: .default(Text("Got it")))
-        }
     }
     
     private func fetchLatestExchangeRatesForSelectedCurrencies(selectedCurrency : [String], mode: CurrencyDataMode) async {
