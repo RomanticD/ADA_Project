@@ -22,7 +22,6 @@ struct OperationPanel: View {
         VStack{
             Button(action: {
                 isButtonClicked = true
-                hasArbitrageOpportunity.toggle()
                 
                 animated = false
                 
@@ -31,6 +30,12 @@ struct OperationPanel: View {
                 }
                 
                 matrix = exchangeRateDataToMatrix(data: rateData.sorted(by: {$0.currency < $1.currency}))
+                
+                let result = getArbitageCycle(matrix: matrix)
+                
+//                ratePathResultSet = result.resultRateSet
+                hasArbitrageOpportunity = result.hasArbitageChance
+                arbitrageCyclePath = result.path
                 
                 ratePathResultSet = [0.127081, 19.200318, 0.052082]
             
@@ -68,22 +73,57 @@ struct OperationPanel: View {
             .buttonStyle(.plain)
             
             VStack{
-                ForEach(0..<matrix.count, id: \.self) { row in
-                    HStack {
-                        ForEach(0..<matrix[row].count, id: \.self) { col in
-                            Text(String(format: "%.6f", matrix[row][col]))
-                                .padding(5)
-                                .frame(width: 100)
-                                .border(Color.gray)
-                                .transition(.scale)
-                                
+                Text(isButtonClicked ? "The matrix passed into the algorithm: " : "Click the button above to continue")
+                    .font(.subheadline)
+                    .padding(.top)
+                    .foregroundColor(.secondary)
+                    .transition(.slide)
+                
+                if (isButtonClicked){
+                    VStack {
+                        ForEach(0..<matrix.count, id: \.self) { row in
+                            HStack {
+                                ForEach(0..<matrix[row].count, id: \.self) { col in
+                                    Text(String(format: "%.6f", matrix[row][col]))
+                                        .padding(5)
+                                        .frame(width: 400 / CGFloat(matrix.count))
+                                        .border(Color(hex: "2c3e50").opacity(0.6), width: 2)
+                                        .transition(.scale)
+                                        
+                                }
+                            }
                         }
                     }
+                    .frame(height: 200)
+                }else{
+                    ProgressView()
+                        .padding(5)
+                        .frame(height: 200)
                 }
             }
-            .frame(height: 200)
             
-            if (isButtonClicked){
+//            ForEach(ratePathResultSet, id: \.self) { value in
+//                Text(String(format: "%.10f", value))
+//            }
+////            
+//            ForEach(arbitrageCyclePath, id: \.self){ path in
+//                Text(String(path))
+//            }
+            
+            if (true){
+                Image(systemName: "arrowshape.down.fill")
+                    .padding(.vertical)
+                    .font(.system(size: 50))
+                    .bold()
+                    .foregroundStyle(hasArbitrageOpportunity ? Color.green.opacity(0.8) : Color.red.opacity(0.8))
+                    .transition(.symbolEffect(.appear, options: .speed(0.5)))
+                    .symbolEffect(
+                        .bounce.up.byLayer,
+                        value: animated
+                    )
+            }
+            
+            if (true){
                 HStack {
                     Image(systemName: hasArbitrageOpportunity ? "checkmark.square" : "xmark.square")
                         .font(.system(size: 30))
@@ -94,16 +134,27 @@ struct OperationPanel: View {
                             options: .speed(0.5),
                             value: animated
                         )
-                    .contentTransition(.symbolEffect(.replace, options: .speed(0.5)))
+                        .contentTransition(.symbolEffect(.replace, options: .speed(0.5)))
                     
                     Text(hasArbitrageOpportunity ? "Arbitrage Opportunities Discoverd 🤩": "No Arbitrage Opportunities Found 💔")
                         .bold()
-                        .transition(.scale.combined(with: .slide))
+                        .transition(.scale.combined(with: .slide).combined(with: .opacity))
                         .foregroundStyle(hasArbitrageOpportunity ? Color.green : Color.red)
                         .font(.largeTitle)
                 }
                 .animation(.default, value: animated)
             }
+            
+            Text("""
+            1. Change from CNY to USD
+            2. Change from USD to EUR
+            3. Change from EUR to CNY
+            """)
+            .lineSpacing(5)
+//            .bold()
+            .font(.title2)
+            .padding(.top)
+            
         
             Spacer()
         }
@@ -113,4 +164,5 @@ struct OperationPanel: View {
 
 #Preview {
     OperationPanel(animated: .constant(false), selectedCurrency: .constant([]), rateData: .constant(defaultRateData), ratePathResultSet: .constant([0.127081, 19.200318]))
+        .frame(width: 400, height: 600)
 }

@@ -19,6 +19,8 @@
 		077A0ED22B08F42900544A0B /* FetchedExchangeRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0ED12B08F42900544A0B /* FetchedExchangeRate.swift */; };
 		077A0ED42B09AE5C00544A0B /* CurrencyTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0ED32B09AE5C00544A0B /* CurrencyTag.swift */; };
 		077A0ED62B0A55D300544A0B /* AlgorithmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0ED52B0A55D300544A0B /* AlgorithmManager.swift */; };
+		077A0F0B2B0D99D400544A0B /* AppSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0F0A2B0D99D400544A0B /* AppSetting.swift */; };
+		077A0F0D2B0D9CB900544A0B /* SettingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077A0F0C2B0D9CB900544A0B /* SettingPanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		077A0ED12B08F42900544A0B /* FetchedExchangeRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedExchangeRate.swift; sourceTree = "<group>"; };
 		077A0ED32B09AE5C00544A0B /* CurrencyTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyTag.swift; sourceTree = "<group>"; };
 		077A0ED52B0A55D300544A0B /* AlgorithmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmManager.swift; sourceTree = "<group>"; };
+		077A0F0A2B0D99D400544A0B /* AppSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSetting.swift; sourceTree = "<group>"; };
+		077A0F0C2B0D9CB900544A0B /* SettingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPanel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,8 @@
 				077A0ECF2B087E6900544A0B /* OperationPanel.swift */,
 				077A0ED12B08F42900544A0B /* FetchedExchangeRate.swift */,
 				077A0ED52B0A55D300544A0B /* AlgorithmManager.swift */,
+				077A0F0A2B0D99D400544A0B /* AppSetting.swift */,
+				077A0F0C2B0D9CB900544A0B /* SettingPanel.swift */,
 			);
 			path = CurrencyExchangeSys;
 			sourceTree = "<group>";
@@ -156,11 +162,13 @@
 			files = (
 				077A0ED02B087E6900544A0B /* OperationPanel.swift in Sources */,
 				077A0ED42B09AE5C00544A0B /* CurrencyTag.swift in Sources */,
+				077A0F0B2B0D99D400544A0B /* AppSetting.swift in Sources */,
 				077A0EB92B070ACE00544A0B /* ContentView.swift in Sources */,
 				077A0EB72B070ACE00544A0B /* CurrencyExchangeSysApp.swift in Sources */,
 				077A0ECA2B072CEB00544A0B /* CurrencyExchangeGraphView.swift in Sources */,
 				077A0ED22B08F42900544A0B /* FetchedExchangeRate.swift in Sources */,
 				077A0ED62B0A55D300544A0B /* AlgorithmManager.swift in Sources */,
+				077A0F0D2B0D9CB900544A0B /* SettingPanel.swift in Sources */,
 				077A0ECC2B072FEC00544A0B /* CurrencyExchangeData.swift in Sources */,
 				077A0ECE2B08325A00544A0B /* WelcomePage.swift in Sources */,
 				077A0EC62B070C3700544A0B /* MainPanel.swift in Sources */,

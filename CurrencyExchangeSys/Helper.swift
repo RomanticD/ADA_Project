@@ -39,6 +39,14 @@ struct CellModifier: ViewModifier {
         let isBoldAndColored : Bool  = rateContainedInResult && animated
         
         return content
+            .background(content: {
+                if (isBoldAndColored){
+                    RoundedRectangle(cornerSize: CGSize(width: 20, height: 10))
+                        .foregroundColor(Color.purple)
+                        .opacity(0.2)
+                }
+            })
+            .font(isBoldAndColored ? .headline : .body)
             .bold(isBoldAndColored)
             .foregroundStyle(getTextColor(data: data, ratePathResultSet: ratePathResultSet, animated: animated))
     }
@@ -51,7 +59,7 @@ struct CellModifier: ViewModifier {
             return Color.secondary
         }else{
             if (isBoldAndColored){
-                return Color.indigo.opacity(0.8)
+                return Color.purple
             }else{
                 return Color.primary
             }
