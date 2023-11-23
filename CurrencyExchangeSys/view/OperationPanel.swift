@@ -10,6 +10,8 @@ import SwiftUI
 struct OperationPanel: View {
     @Binding var animated : Bool
     @Binding var selectedCurrency : [String]
+    @State private var currencyArrayAfterButtonClicked : [String] = []
+    @State private var cycleDisplay = ""
     @Binding var rateData : [CurrencyExchangeData]
     @Binding var ratePathResultSet : [Double]
     @State var matrix : [[Double]] = []
@@ -38,6 +40,9 @@ struct OperationPanel: View {
                 arbitrageCyclePath = result.path
                 
                 ratePathResultSet = [0.127081, 19.200318, 0.052082]
+                
+                currencyArrayAfterButtonClicked = selectedCurrency.sorted(by: {$0 < $1})
+                cycleDisplay = displayArbitageCycle(currencyArray: currencyArrayAfterButtonClicked, vertexVisited: [0, 1, 3, 0])
             
             }, label: {
                 HStack {
@@ -145,11 +150,7 @@ struct OperationPanel: View {
                 .animation(.default, value: animated)
             }
             
-            Text("""
-            1. Change from CNY to USD
-            2. Change from USD to EUR
-            3. Change from EUR to CNY
-            """)
+            Text(cycleDisplay)
             .lineSpacing(5)
             .font(.title2)
             .padding(.top)
@@ -157,6 +158,8 @@ struct OperationPanel: View {
         
             Spacer()
         }
+        .onAppear(perform: {
+        })
         .frame(width: (screen!.width / 1.5) / 2)
     }
 }

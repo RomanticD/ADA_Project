@@ -53,6 +53,46 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		07675BDA2B0F1C9B00CB3DAE /* view */ = {
+			isa = PBXGroup;
+			children = (
+				077A0EB82B070ACE00544A0B /* ContentView.swift */,
+				077A0EC52B070C3700544A0B /* MainPanel.swift */,
+				077A0EC92B072CEB00544A0B /* CurrencyExchangeGraphView.swift */,
+				077A0ECD2B08325A00544A0B /* WelcomePage.swift */,
+				077A0ED32B09AE5C00544A0B /* CurrencyTag.swift */,
+				077A0ECF2B087E6900544A0B /* OperationPanel.swift */,
+				077A0F0C2B0D9CB900544A0B /* SettingPanel.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		07675BDB2B0F1CBC00CB3DAE /* model */ = {
+			isa = PBXGroup;
+			children = (
+				077A0ECB2B072FEC00544A0B /* CurrencyExchangeData.swift */,
+				077A0ED12B08F42900544A0B /* FetchedExchangeRate.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		07675BDC2B0F1CE900CB3DAE /* util */ = {
+			isa = PBXGroup;
+			children = (
+				077A0EC72B071D8E00544A0B /* Helper.swift */,
+				077A0F0A2B0D99D400544A0B /* AppSetting.swift */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		07675BDD2B0F1D0000CB3DAE /* algorithm */ = {
+			isa = PBXGroup;
+			children = (
+				077A0ED52B0A55D300544A0B /* AlgorithmManager.swift */,
+			);
+			path = algorithm;
+			sourceTree = "<group>";
+		};
 		077A0EAA2B070ACE00544A0B = {
 			isa = PBXGroup;
 			children = (
@@ -74,19 +114,11 @@
 			children = (
 				077A0EBF2B070ACF00544A0B /* CurrencyExchangeSys.entitlements */,
 				077A0EBA2B070ACF00544A0B /* Assets.xcassets */,
+				07675BDD2B0F1D0000CB3DAE /* algorithm */,
+				07675BDC2B0F1CE900CB3DAE /* util */,
+				07675BDB2B0F1CBC00CB3DAE /* model */,
+				07675BDA2B0F1C9B00CB3DAE /* view */,
 				077A0EB62B070ACE00544A0B /* CurrencyExchangeSysApp.swift */,
-				077A0EB82B070ACE00544A0B /* ContentView.swift */,
-				077A0EC52B070C3700544A0B /* MainPanel.swift */,
-				077A0EC72B071D8E00544A0B /* Helper.swift */,
-				077A0EC92B072CEB00544A0B /* CurrencyExchangeGraphView.swift */,
-				077A0ECB2B072FEC00544A0B /* CurrencyExchangeData.swift */,
-				077A0ECD2B08325A00544A0B /* WelcomePage.swift */,
-				077A0ED32B09AE5C00544A0B /* CurrencyTag.swift */,
-				077A0ECF2B087E6900544A0B /* OperationPanel.swift */,
-				077A0ED12B08F42900544A0B /* FetchedExchangeRate.swift */,
-				077A0ED52B0A55D300544A0B /* AlgorithmManager.swift */,
-				077A0F0A2B0D99D400544A0B /* AppSetting.swift */,
-				077A0F0C2B0D9CB900544A0B /* SettingPanel.swift */,
 			);
 			path = CurrencyExchangeSys;
 			sourceTree = "<group>";

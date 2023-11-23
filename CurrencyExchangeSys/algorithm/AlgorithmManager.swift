@@ -110,3 +110,40 @@ internal func getArbitageCycle(matrix: [[Double]]) -> (hasArbitageChance: Bool, 
     return (hasArbitrageChance, vertexPath, resultRatio)
 }
 
+internal func displayArbitageCycle(currencyArray: [String], vertexVisited: [Int]) -> String{
+    var resultMessage = ""
+    
+    for indexInVertex in 0..<vertexVisited.count - 1 {
+        var lineInfo = ""
+        
+        for _ in 0..<currencyArray.count{
+            let indexA = vertexVisited[indexInVertex]
+            let indexB = vertexVisited[indexInVertex + 1]
+            
+            if ((indexA > currencyArray.count - 1) || (indexB > currencyArray.count - 1)) {
+                print("array index out of bounds!")
+                return ""
+            }
+            
+            lineInfo = "\(indexInVertex + 1). Change from \(currencyArray[indexA]) to \(currencyArray[indexB])"
+        }
+    
+        resultMessage.append("\(lineInfo)\n")
+    }
+    
+    return resultMessage
+}
+
+enum DisplayMode {
+    case found, notFound, errorRange
+}
+
+internal func getProfitInfo(ratioAfterExchange : Double) -> (displayMode: DisplayMode, message: String) {
+    
+    var mode : DisplayMode
+    var message = ""
+    
+    mode = .errorRange
+    
+    return (mode, "You can earn 1 unit of profit for every 10,000 units of currency exchanged")
+}
