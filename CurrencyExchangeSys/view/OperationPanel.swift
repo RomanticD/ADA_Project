@@ -18,6 +18,7 @@ struct OperationPanel: View {
     @State var hasArbitrageOpportunity : Bool = false
     @State var isButtonClicked : Bool = false
     @State var arbitrageCyclePath : [Int] = []
+    @State var resultRatio : Double = 0.0
     var screen = NSScreen.main?.visibleFrame
     
     var body: some View {
@@ -33,17 +34,19 @@ struct OperationPanel: View {
                 
                 matrix = exchangeRateDataToMatrix(data: rateData.sorted(by: {$0.currency < $1.currency}))
                 
-                let result = getArbitageCycle(matrix: matrix)
+                let arbitageInfo = findArbitrageChanceInfo(matrix: matrix)
                 
-//                ratePathResultSet = result.resultRateSet
-                hasArbitrageOpportunity = result.hasArbitageChance
-                arbitrageCyclePath = result.path
+                hasArbitrageOpportunity = arbitageInfo.hasArbitrageChance
                 
-                ratePathResultSet = [0.127081, 19.200318, 0.052082]
+                if hasArbitrageOpportunity{
+                    arbitrageCyclePath = arbitageInfo.vertexPath
+                    arbitrageCyclePath.append(arbitrageCyclePath[0])
+                }
                 
+                ratePathResultSet = arbitageInfo.resultRateSet
+                resultRatio = arbitageInfo.result
                 currencyArrayAfterButtonClicked = selectedCurrency.sorted(by: {$0 < $1})
-                cycleDisplay = displayArbitageCycle(currencyArray: currencyArrayAfterButtonClicked, vertexVisited: [0, 1, 3, 0])
-            
+                cycleDisplay = displayArbitageCycle(currencyArray: selectedCurrency.sorted(by: {$0 < $1}), vertexVisited: arbitrageCyclePath)
             }, label: {
                 HStack {
                     Image(systemName: "point.forward.to.point.capsulepath.fill")
@@ -107,14 +110,6 @@ struct OperationPanel: View {
                 }
             }
             
-//            ForEach(ratePathResultSet, id: \.self) { value in
-//                Text(String(format: "%.10f", value))
-//            }
-////            
-//            ForEach(arbitrageCyclePath, id: \.self){ path in
-//                Text(String(path))
-//            }
-            
             if (true){
                 Image(systemName: "arrowshape.down.fill")
                     .padding(.vertical)
@@ -150,17 +145,57 @@ struct OperationPanel: View {
                 .animation(.default, value: animated)
             }
             
-            Text(cycleDisplay)
-            .lineSpacing(5)
-            .font(.title2)
-            .padding(.top)
+            if isButtonClicked && !currencyArrayAfterButtonClicked.isEmpty {
+                Text(cycleDisplay)
+                .lineSpacing(5)
+                .font(.title2)
+                .padding(.top)
+                .fontWeight(.semibold)
+                .frame(height: 200)
+            } else if isButtonClicked{
+                Text("""
+                    1. Change from EUR to HKD
+                    2. Change from HKD to CNY
+                    3. Change from CNY to EUR
+                    """)
+                .lineSpacing(5)
+                .font(.title2)
+                .padding(.top)
+                .fontWeight(.semibold)
+                .frame(height: 200)
+            }
             
+            if isButtonClicked{
+                let formattedResult = String(format: "%.15f", resultRatio)
+                Text("result/original = " + formattedResult)
+                
+                let profitInfo = getProfitInfo(ratioAfterExchange: resultRatio)
+                
+                Text(profitInfo.message)
+                    .font(.system(size: 14, design: .rounded))
+                    .padding(.vertical)
+                    .fontWeight(.light)
+                    .transition(.slide.combined(with: .opacity))
+                    .bold(getProfitInfoTextStyle(mode: profitInfo.displayMode).bold)
+                    .foregroundStyle(getProfitInfoTextStyle(mode: profitInfo.displayMode).color)
+            }
         
             Spacer()
         }
         .onAppear(perform: {
         })
         .frame(width: (screen!.width / 1.5) / 2)
+    }
+    
+    private func getProfitInfoTextStyle(mode : DisplayMode) -> (color : Color, bold : Bool){
+        switch mode{
+        case .errorRange:
+            return (Color.yellow, true)
+        case .found:
+            return (Color.green, true)
+        case .notFound:
+            return (Color.red, true)
+        }
     }
 }
 

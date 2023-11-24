@@ -56,7 +56,6 @@ struct WelcomePage: View {
         }
         .navigationTitle("Welcome")
         .ignoresSafeArea(.all, edges: .all)
-//        .frame(width: (screen!.width / 1.8), height: (screen!.height / 1.8))
     }
     
     @ViewBuilder

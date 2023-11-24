@@ -104,8 +104,9 @@ struct CurrencyExchangeGraphView: View {
                             ProgressView()
                         }else{
                             ForEach(datum.rate, id: \.self) { rate in
-                                Text("\(rate)")
+                                Text(String(format: "%.4f", rate))
                                     .modifier(CellModifier(data: rate, ratePathResultSet: ratePathResultSet, animated: $animated))
+
                             }
                         }
                     }
