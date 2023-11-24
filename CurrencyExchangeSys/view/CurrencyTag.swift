@@ -45,6 +45,6 @@ struct CurrencyTag: View {
     }
 }
 
-#Preview {
-    CurrencyTag(currency: "CNY", selectedCurrency: .constant([]))
-}
+//#Preview {
+//    CurrencyTag(currency: "CNY", selectedCurrency: .constant([]))
+//}

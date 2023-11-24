@@ -199,7 +199,7 @@ struct OperationPanel: View {
     }
 }
 
-#Preview {
-    OperationPanel(animated: .constant(false), selectedCurrency: .constant([]), rateData: .constant(defaultRateData), ratePathResultSet: .constant([0.127081, 19.200318]))
-        .frame(width: 400, height: 600)
-}
+//#Preview {
+//    OperationPanel(animated: .constant(false), selectedCurrency: .constant([]), rateData: .constant(defaultRateData), ratePathResultSet: .constant([0.127081, 19.200318]))
+//        .frame(width: 400, height: 600)
+//}

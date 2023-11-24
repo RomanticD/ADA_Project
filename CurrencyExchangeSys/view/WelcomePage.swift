@@ -92,6 +92,6 @@ struct WelcomePage: View {
     }
 }
 
-#Preview {
-    WelcomePage()
-}
+//#Preview {
+//    WelcomePage()
+//}

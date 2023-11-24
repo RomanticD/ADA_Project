@@ -7,7 +7,15 @@
 
 import Foundation
 
+/**
+ Converts an array of `CurrencyExchangeData` into a matrix of exchange rates.
 
+  - Parameters:
+     - data: An array of `CurrencyExchangeData` objects representing currency exchange rates.
+
+  - Returns:
+     A 2D matrix (`[[Double]]`) where each row corresponds to the exchange rates for a specific currency.
+*/
 internal func exchangeRateDataToMatrix(data: [CurrencyExchangeData]) -> [[Double]] {
     var matrix: [[Double]] = []
 
@@ -20,6 +28,12 @@ internal func exchangeRateDataToMatrix(data: [CurrencyExchangeData]) -> [[Double
     return matrix
 }
 
+/**
+ Generates a random date within the past 5 years and returns it as a string.
+
+ - Returns:
+    A string representation of a randomly generated date in the format "yyyy-MM-dd".
+*/
 internal func generateDate() -> String {
     let currentDate = Date()
     let randomTimeInterval = TimeInterval(arc4random_uniform(UInt32(5 * 365 * 24 * 60 * 60)))
@@ -35,6 +49,16 @@ internal func generateDate() -> String {
     }
 }
 
+/**
+ Displays information about an arbitrage cycle based on the provided currency array and vertexVisited indices.
+ 
+ - Parameters:
+    - currencyArray: An array of strings representing currencies.
+    - vertexVisited: An array of integers representing the sequence of vertices visited in the arbitrage cycle.
+
+ - Returns:
+    A formatted string containing information about the arbitrage cycle.
+*/
 internal func displayArbitageCycle(currencyArray: [String], vertexVisited: [Int]) -> String{
     var resultMessage = ""
     
@@ -63,10 +87,15 @@ internal func displayArbitageCycle(currencyArray: [String], vertexVisited: [Int]
     return resultMessage
 }
 
-enum DisplayMode {
-    case found, notFound, errorRange
-}
+/**
+ Analyzes the profit potential based on the provided exchange rate ratio.
 
+  - Parameters:
+     - ratioAfterExchange: The exchange rate ratio after the currency exchange.
+
+  - Returns:
+     A tuple containing the display mode (enum `DisplayMode`) and a message describing the profit information.
+*/
 internal func getProfitInfo(ratioAfterExchange : Double) -> (displayMode: DisplayMode, message: String) {
     guard ratioAfterExchange > 1 else {
         return (.notFound, "You have no chance of profit😭")
@@ -109,14 +138,14 @@ internal func findArbitrageChanceInfo(matrix: [[Double]]) -> (hasArbitrageChance
     var path : [Int] = []
     var resultRateSet : [Double] = []
 
-    // I use Bellman-Ford algorithm partly to find the best path
-    // Distance means the best path value of the vertex, not the value from current to source
-    // Predecessor means the previous node, it's the crucial to give the graph of path
+    /// I use Bellman-Ford algorithm partly to find the best path
+    /// Distance means the best path value of the vertex, not the value from current to source
+    /// Predecessor means the previous node, it's the crucial to give the graph of path
     var distance = Array(repeating: -Double.greatestFiniteMagnitude, count: vertexCount)
     var predecessor = Array(repeating: -1, count: vertexCount)
     distance[0] = 0
     
-    // The part of Bellman-Ford algorithm, but does not simply utilize it
+    /// The part of Bellman-Ford algorithm, but does not simply utilize it
     for _ in 0..<vertexCount-1 {
         for u in 0..<vertexCount {
             for v in 0..<vertexCount {
@@ -139,9 +168,9 @@ internal func findArbitrageChanceInfo(matrix: [[Double]]) -> (hasArbitrageChance
         }
     }
     
-    // After we got the predecessor and distance of every vertex, we can check if it has the circle we want
-    // Circle Dis and Index record the distance and index of the vertex that has circle
-    // Max Dis and Index means we get the max distance and index of vertex that has circle
+    /// After we got the predecessor and distance of every vertex, we can check if it has the circle we want
+    /// Circle Dis and Index record the distance and index of the vertex that has circle
+    /// Max Dis and Index means we get the max distance and index of vertex that has circle
     var maxDis: Double = 0
     var maxIndex: Int = -1
     var circleDis: [Double] = []
@@ -155,7 +184,7 @@ internal func findArbitrageChanceInfo(matrix: [[Double]]) -> (hasArbitrageChance
             }
         }
     }
-    // Get the max value of vertex that has circle
+    /// Get the max value of vertex that has circle
     for i in 0..<circleDis.count{
         if maxDis < circleDis[i]{
             maxDis = circleDis[i]
@@ -163,13 +192,13 @@ internal func findArbitrageChanceInfo(matrix: [[Double]]) -> (hasArbitrageChance
         }
     }
     
-    // If maxIndex is -1, that means there isn't circle
+    /// If maxIndex is -1, that means there isn't circle
     if maxIndex != -1 {
         path = calculateDis(source: maxIndex).path
         resultRateSet = calculateDis(source: maxIndex).resultSet
     }
     
-    // Test the correctness of code
+    /// Test the correctness of code
     for i in 0..<distance.count{
         print(exp(distance[i]))
     }
@@ -184,21 +213,21 @@ internal func findArbitrageChanceInfo(matrix: [[Double]]) -> (hasArbitrageChance
         return (hasArbitrageChance, path.reversed(), resultRateSet, exp(maxDis))
     }
     
-    // Calculate the best value of path - distance
+    /// Calculate the best value of path - distance
     func calculateDis(source: Int) -> (distance: Double, path: [Int], resultSet: [Double]){
         var current = source
         var currentPath: [Int] = []
         var resultSet: [Double] = []
         
-        // Find the current path of the source node
-        // iterate the nodes until it is void or become circle
+        /// Find the current path of the source node
+        /// iterate the nodes until it is void or become circle
         while predecessor[current] != -1 && !currentPath.contains(predecessor[current]) {
             currentPath.append(current)
             current = predecessor[current]
         }
         currentPath.append(current)
         
-        // Add the every rate of edge
+        ///Add the every rate of edge
         var distance: Double = 0
         for i in 0..<currentPath.count{
             if predecessor[currentPath[i]] == -1 {
@@ -218,3 +247,18 @@ internal func findArbitrageChanceInfo(matrix: [[Double]]) -> (hasArbitrageChance
 
     return (hasArbitrageChance, path.reversed(), resultRateSet, exp(maxDis))
 }
+
+/**
+ Enum representing different display modes for profit information.
+ */
+enum DisplayMode {
+    /// Indicates that a significant profit is found.
+    case found
+    
+    /// Indicates that no profit is found.
+    case notFound
+    
+    /// Indicates that there is potential for profit, but it is within an error range.
+    case errorRange
+}
+

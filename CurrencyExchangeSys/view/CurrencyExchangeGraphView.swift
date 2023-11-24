@@ -309,15 +309,6 @@ struct CurrencyExchangeGraphView: View {
         }
     }
     
-    private func generateData() {
-        rateData = [
-            CurrencyExchangeData(currency: "USD", rate: generateRandomRates()),
-            CurrencyExchangeData(currency: "EUR", rate: generateRandomRates()),
-            CurrencyExchangeData(currency: "GBP", rate: generateRandomRates()),
-            CurrencyExchangeData(currency: "JPY", rate: generateRandomRates())
-        ]
-    }
-    
     private func fetchLatestExchangeRate(baseCurrency: String, currencies: [String], mode: CurrencyDataMode) async {
         let targetCurrencies = currencies.sorted(by: {$0 < $1}).joined(separator: "%2C")
         var exchangeRates: [String: Double] = [:]
@@ -370,17 +361,6 @@ struct CurrencyExchangeGraphView: View {
        
         return sortedValues
     }
-
-    private func generateRandomRates() -> [Double] {
-        let randomMultiplier = Double.random(in: 0.5...1.5)
-
-        let randomRates = (0..<4).map { _ in
-            return Double.random(in: 0.01...2.0)
-        }
-
-        let adjustedRates = randomRates.map { $0 * randomMultiplier }
-        return adjustedRates
-    }
     
     @ViewBuilder
     private func createCurrencyTags() -> some View {
@@ -412,8 +392,8 @@ struct CurrencyExchangeGraphView: View {
 
 }
 
-#Preview {
-    CurrencyExchangeGraphView(rateData: .constant(defaultRateData), ratePathResultSet: .constant([0.127081, 19.200318]), selectedCurrency: .constant(["CNY", "JPY"]), animated: .constant(false))
-    .frame(width: 400, height: 500)
-    .environmentObject(AppSetting())
-}
+//#Preview {
+//    CurrencyExchangeGraphView(rateData: .constant(defaultRateData), ratePathResultSet: .constant([0.127081, 19.200318]), selectedCurrency: .constant(["CNY", "JPY"]), animated: .constant(false))
+//    .frame(width: 400, height: 500)
+//    .environmentObject(AppSetting())
+//}

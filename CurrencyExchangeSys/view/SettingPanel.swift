@@ -101,6 +101,6 @@ struct SettingPanel: View {
     }
 }
 
-#Preview {
-    SettingPanel()
-}
+//#Preview {
+//    SettingPanel()
+//}

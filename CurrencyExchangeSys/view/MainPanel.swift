@@ -40,7 +40,7 @@ struct MainPanel: View {
     }
 }
 
-#Preview {
-    MainPanel()
-        .frame(width: 1000, height: 400)
-}
+//#Preview {
+//    MainPanel()
+//        .frame(width: 1000, height: 400)
+//}
