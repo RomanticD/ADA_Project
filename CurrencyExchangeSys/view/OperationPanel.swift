@@ -165,7 +165,7 @@ struct OperationPanel: View {
                 .frame(height: 200)
             }
             
-            if isButtonClicked{
+            if isButtonClicked && hasArbitrageOpportunity{
                 let formattedResult = String(format: "%.15f", resultRatio)
                 Text("result/original = " + formattedResult)
                 

@@ -207,8 +207,9 @@ internal func findArbitrageChanceInfo(matrix: [[Double]]) -> (hasArbitrageChance
     if exp(maxDis) > 1 {
         hasArbitrageChance = true
         
-        print("result rate set: \(resultRateSet)")
+        print("matrix: \(matrix)")
         print("result path: \(path.reversed())")
+        print("result ratio: \(exp(maxDis))")
         
         return (hasArbitrageChance, path.reversed(), resultRateSet, exp(maxDis))
     }
@@ -244,6 +245,9 @@ internal func findArbitrageChanceInfo(matrix: [[Double]]) -> (hasArbitrageChance
         
         return (distance, currentPath, resultSet)
     }
+    print("matrix: \(matrix)")
+    print("result path: \(path.reversed())")
+    print("result ratio: \(exp(maxDis))")
 
     return (hasArbitrageChance, path.reversed(), resultRateSet, exp(maxDis))
 }
