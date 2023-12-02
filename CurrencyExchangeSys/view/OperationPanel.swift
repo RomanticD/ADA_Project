@@ -145,14 +145,14 @@ struct OperationPanel: View {
                 .animation(.default, value: animated)
             }
             
-            if isButtonClicked && !currencyArrayAfterButtonClicked.isEmpty {
+            if isButtonClicked && !currencyArrayAfterButtonClicked.isEmpty && hasArbitrageOpportunity {
                 Text(cycleDisplay)
                 .lineSpacing(5)
                 .font(.title2)
                 .padding(.top)
                 .fontWeight(.semibold)
                 .frame(height: 200)
-            } else if isButtonClicked{
+            } else if isButtonClicked && hasArbitrageOpportunity{
                 Text("""
                     1. Change from EUR to HKD
                     2. Change from HKD to CNY
